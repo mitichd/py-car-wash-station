@@ -23,27 +23,27 @@ class CarWashStation:
         self.average_rating = average_rating
         self.count_of_ratings = count_of_ratings
 
-    def serve_cars(self, car: list) -> float:
+    def serve_cars(self, cars: list[Car]) -> float:
         """
-        Приймає список автомобілів, миє лише ті,
-        у яких clean_mark нижче clean_power станції.
-        Повертає дохід станції від миття цих автомобілів,
-        округлений до 1 десятої.
+        Takes a list of Car's, washes only cars
+        with clean_mark < clean_power of wash station
+        and returns income of CarWashStation for serving this list of Car's,
+        rounded to 1 decimal
         """
         total_income = 0
-        for i in car:
-            if i.clean_mark < self.clean_power:
-                total_income += self.calculate_washing_price(i)
-                print(f"***I can clean {i.brand}***")
-                self.wash_single_car(i)
+        for car in cars:
+            if car.clean_mark < self.clean_power:
+                total_income += self.calculate_washing_price(car)
+                print(f"***I can clean {car.brand}***")
+                self.wash_single_car(car)
         return round(total_income, 1)
 
     def calculate_washing_price(self, car: any) -> float:
         """
-        Розрахунок вартості миття автомобіля за формулою:
-        клас комфорту авто * різниця між потужністю мийки
-        та рівнем забруднення авто * рейтинг автомийки /
-        відстань автомийки до центру міста
+        Calculates cost for a single car wash, cost is calculated as:
+        car's comfort class * difference between wash station's
+        clean power and car's clean mark * car wash station rating
+        / car wash station distance to the center of the city
         """
         washing_price = round(
             car.comfort_class * (self.clean_power - car.clean_mark)
@@ -53,15 +53,16 @@ class CarWashStation:
 
     def wash_single_car(self, car: str) -> None:
         """
-        Миє один авто. Якщо clean_power станції більший за clean_mark авто,
-        то clean_mark прирівнюється до clean_power.
+        Washes a single car. If the station's clean_power is greater than
+        the car's clean_mark, then clean_mark is equal to clean_power.
         """
         if self.clean_power > car.clean_mark:
             car.clean_mark = self.clean_power
 
     def rate_service(self, rating: int) -> None:
         """
-        Оновлює середній рейтинг та к-сть людей після отримання нової оцінки.
+        Updates the average rating and the number of people
+        after receiving a new rating.
         """
         self.average_rating = round(
             (self.count_of_ratings * self.average_rating + rating)
